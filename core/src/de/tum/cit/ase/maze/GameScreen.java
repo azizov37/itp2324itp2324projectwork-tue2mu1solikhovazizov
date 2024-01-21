@@ -60,7 +60,7 @@ public class GameScreen implements Screen {
         game.getSpriteBatch().begin(); // Important to call this before drawing anything
 
         // Render the text
-        font.draw(game.getSpriteBatch(), "salom chochqachalar", textX, textY);
+        font.draw(game.getSpriteBatch(), "salom chochqachalar hhhh", textX, textY);
 
         // Draw the character next to the text :) / We can reuse sinusInput here
         game.getSpriteBatch().draw(
