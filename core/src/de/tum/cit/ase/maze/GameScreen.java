@@ -62,13 +62,13 @@ public class GameScreen implements Screen {
         font.draw(game.getSpriteBatch(), "Bayraming muborak megajin!!", textX, textY);
 
         // Draw the character next to the text :) / We can reuse sinusInput here
-        game.getSpriteBatch().draw(
-                game.getCharacterDownAnimation().getKeyFrame(sinusInput, true),
-                textX - 96,
-                textY - 64,
-                64,
-                128
-        );
+//        game.getSpriteBatch().draw(
+//                game.getCharacterDownAnimation().getKeyFrame(sinusInput, true),
+//                textX - 96,
+//                textY - 64,
+//                64,
+//                128
+//        );
 
         game.getSpriteBatch().end(); // Important to call this after drawing everything
     }

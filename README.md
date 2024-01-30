@@ -2,6 +2,7 @@
 
 MazeRunner is a 2D top-down view game built using the libGDX framework. In this game, you navigate through mazes, collect keys, avoid traps and enemies, and aim to reach the exit while preserving your limited lives.
 
+![MazeRunner Screenshot](C:\Users\Acer\IdeaProjects\itp2324itp2324projectwork-tue2mu1solikhovazizov\assets\Screenshot_Game.png)
 ## Table of Contents
 - [Game Overview](#game-overview)
 - [Features](#features)
@@ -13,7 +14,11 @@ MazeRunner is a 2D top-down view game built using the libGDX framework. In this 
 - [Credits](#credits)
 
 ## Game Overview
-MazeRunner presents you with challenging mazes to explore. Your objective is to navigate through the maze, collect keys to unlock the exit, and reach it while avoiding traps and enemies. Keep an eye on your remaining lives and make use of the HUD to track your progress. Victory awaits those who successfully conquer the maze!
+MazeRunner presents you with challenging mazes 
+to explore. Your objective is to navigate through the maze, 
+collect keys to unlock the exit, and reach it while avoiding
+traps and enemies. Keep an eye on your remaining lives. Victory awaits 
+those who successfully conquer the maze!
 
 ## Features
 MazeRunner offers the following features:
@@ -22,15 +27,10 @@ MazeRunner offers the following features:
 - Character movement in four directions (up, down, left, right).
 - Limited lives for the character.
 - Collectible keys to unlock the exit.
-- Various obstacles, including static traps and dynamic enemies.
-- Intelligent enemy movement (optional).
-- Camera movement to keep the character in view.
-- HUD displaying lives remaining and key collection status.
+- Various obstacles, including static traps and dynamic enemies as well as pathfinding intelligent enemy.
 - Game menu for pausing, restarting, or exiting.
 - Victory and game over screens with the option to return to the main menu.
 - Background music and sound effects.
-- Support for different screen sizes.
-- Object-oriented code structure with inheritance and proper documentation.
 
 ## Getting Started
 To play MazeRunner, follow these steps:
@@ -61,23 +61,35 @@ https://github.com/your-username/MazeRunner.git
 ## Extensions
 This implementation of MazeRunner includes several extensions:
 
-- **Intelligent Enemies:** Enemies exhibit intelligent behavior and can pathfind toward the character within a certain range.
-- **Point System:** Players earn a score based on their performance, such as completing the maze quickly.
-- **Collectable Lives:** Lives can be collected as power-ups within the maze.
-- **Additional Obstacles:** You can explore various types of obstacles beyond traps and keys.
-- **Player Abilities:** The main character can have additional abilities, such as combat with enemies or power-ups for enhanced capabilities.
-- **Fog of War:** Implement a fog of war mechanic to obscure unexplored areas of the maze.
-- **Movable Walls:** Introduce movable walls that can be pushed by the character.
-- **Multiple Exit Conditions:** Create additional conditions for opening the exit beyond collecting keys.
+**Intelligent Enemy - Yovuz**
 
-Feel free to further extend the game based on your preferences and creativity.
+Allow us to introduce Yovuz, the drowsy Ghost! Yovuz is a unique adversary in the game, adding an extra layer of intrigue to your maze-solving adventures. Yovuz's behavior is anything but ordinary:
+
+- **Slumber Cycles:** Yovuz doesn't start in a typical "sleep" mode. Instead, he operates on a cyclical pattern, dozing off at times and then rousing from his slumber. During his active phases, he can awaken and commence his ghostly patrol.
+
+- **Alert and Astute:** When Yovuz awakens, he becomes astutely aware of his surroundings. Get too close or step into his designated detection zone, and Yovuz springs into action, fully alert. In this mode, he's a master at tracking the player's every move, so careful planning is essential to stay out of his reach.
+
+- **Phantom Skills:** Yovuz, being a Ghost, boasts a unique set of spectral talents. He effortlessly glides through walls and obstacles, making him an enigmatic and formidable presence.
+
+- **Player Interactions:** Yovuz doesn't shy away from interaction. On contact with the player, he can deal damage, resulting in the loss of one of the player's lives. Players must employ cunning strategies, leading Yovuz away from the Key when he's awake and seizing the opportunity to collect it while steering clear of any encounters.
+
+**Bonus Special User**
+
+Discover a hidden feature that can enhance your gameplay experience:
+
+- **Exclusive Access:** By entering the username "UZBEKVIP" when starting the game, you unlock a unique advantage that adds an exciting twist to your maze adventure.
+
+- **Extra Lives:** Players using this special username will begin with additional lives, providing a buffer against the challenges of the maze. You can also replenish lives as needed during gameplay.
+
+- **Strategic Advantage:** "UZBEKVIP" offers a strategic edge, allowing you to tackle tough levels with confidence. It's not just a cheat; it's a tool for mastering the game.
+
+Use this special username to elevate your gaming experience and conquer the maze like never before!
+
 
 ## Documentation
 The code for MazeRunner is well-documented using JavaDoc comments. Each class and method is documented to provide clarity and understanding of the codebase.
 
 ## Credits
-MazeRunner uses open-source 2D assets (images) from sources like Kenney and OpenGameArt for rendering game objects and animations. The background music and sound effects are sourced from royalty-free tracks and effects available in the public domain.
-
-If you use external code or assets from the internet, the source URLs are provided in the JavaDoc comments of the respective code sections.
+MazeRunner uses open-source 2D assets (images) from pre-given sources for rendering game objects and animations. The background music and sound effects are sourced from royalty-free tracks and effects available in the public domain (Zapsplat.com) as well as images generated by DALL-E OpenAI.
 
 Enjoy playing MazeRunner and have fun exploring challenging mazes!

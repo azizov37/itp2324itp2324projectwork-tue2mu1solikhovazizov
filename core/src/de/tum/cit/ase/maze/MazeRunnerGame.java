@@ -2,13 +2,8 @@ package de.tum.cit.ase.maze;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import games.spooky.gdx.nativefilechooser.NativeFileChooser;
 
 /**
@@ -19,15 +14,19 @@ public class MazeRunnerGame extends Game {
     // Screens
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
+    private MapSelectScreen mapSelectScreen;
+    private WonScreen wonScreen;
+    private LoseScreen loseScreen;
 
     // Sprite Batch for rendering
     private SpriteBatch spriteBatch;
+    private AudioManager audioManager;
 
     // UI Skin
     private Skin skin;
 
-    // Character animation downwards
-    private Animation<TextureRegion> characterDownAnimation;
+    private Maze maze;
+    private String playerName;
 
     /**
      * Constructor for MazeRunnerGame.
@@ -45,13 +44,10 @@ public class MazeRunnerGame extends Game {
     public void create() {
         spriteBatch = new SpriteBatch(); // Create SpriteBatch
         skin = new Skin(Gdx.files.internal("craft/craftacular-ui.json")); // Load UI skin
-        this.loadCharacterAnimation(); // Load character animation
 
         // Play some background music
-        // Background sound
-        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("background.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+        this.audioManager = new AudioManager();
+        audioManager.playBackgroundMusic();
 
         goToMenu(); // Navigate to the menu screen
     }
@@ -60,11 +56,26 @@ public class MazeRunnerGame extends Game {
      * Switches to the menu screen.
      */
     public void goToMenu() {
-        this.setScreen(new MenuScreen(this)); // Set the current screen to MenuScreen
+        menuScreen = new MenuScreen(this);
+        this.setScreen(menuScreen); // Set the current screen to MenuScreen
+
         if (gameScreen != null) {
             gameScreen.dispose(); // Dispose the game screen if it exists
             gameScreen = null;
         }
+
+        if (wonScreen != null) {
+            wonScreen.dispose(); // Dispose the game screen if it exists
+            wonScreen = null;
+        }
+
+        if (loseScreen != null) {
+            loseScreen.dispose(); // Dispose the game screen if it exists
+            loseScreen = null;
+        }
+
+        audioManager.playBackgroundMusic();
+        audioManager.stopGameBackgroundMusic();
     }
 
     /**
@@ -72,31 +83,64 @@ public class MazeRunnerGame extends Game {
      */
     public void goToGame() {
         this.setScreen(new GameScreen(this)); // Set the current screen to GameScreen
+        if (mapSelectScreen != null) {
+
+            mapSelectScreen.dispose(); // Dispose the menu screen if it exists
+            mapSelectScreen = null;
+        }
+
+        audioManager.stopBackgroundMusic();
+        audioManager.playGameBackgroundMusic();
+
+    }
+
+    public void goToWonMenu() {
+        this.setScreen(new WonScreen(this)); // Set the current screen to GameScreen
+        if (gameScreen != null) {
+
+            gameScreen.dispose(); // Dispose the menu screen if it exists
+            gameScreen = null;
+        }
+
+        audioManager.playVictorySound();
+
+    }
+
+    public void goToloseMenu() {
+        this.setScreen(new LoseScreen(this)); // Set the current screen to GameScreen
+        if (gameScreen != null) {
+
+            gameScreen.dispose(); // Dispose the menu screen if it exists
+            gameScreen = null;
+        }
+
+        audioManager.playGameOverSound();
+
+    }
+    /**
+     * Switches to the Map Selection screen.
+     */
+    public void goToMapSelection() {
+
+
         if (menuScreen != null) {
+            playerName = menuScreen.getPlayerName();
+            if (playerName!=null) {
+                System.out.println("not null and " + playerName);
+            }
+
             menuScreen.dispose(); // Dispose the menu screen if it exists
             menuScreen = null;
         }
-    }
 
-    /**
-     * Loads the character animation from the character.png file.
-     */
-    private void loadCharacterAnimation() {
-        Texture walkSheet = new Texture(Gdx.files.internal("character.png"));
+        // Create the MapSelectScreen before setting the player name
+        MapSelectScreen mapSelectScreen = new MapSelectScreen(this);
 
-        int frameWidth = 16;
-        int frameHeight = 32;
-        int animationFrames = 4;
+        // Set the player name in the MapSelectScreen
+        mapSelectScreen.setPlayerName(playerName);
 
-        // libGDX internal Array instead of ArrayList because of performance
-        Array<TextureRegion> walkFrames = new Array<>(TextureRegion.class);
-
-        // Add all frames to the animation
-        for (int col = 0; col < animationFrames; col++) {
-            walkFrames.add(new TextureRegion(walkSheet, col * frameWidth, 0, frameWidth, frameHeight));
-        }
-
-        characterDownAnimation = new Animation<>(0.1f, walkFrames);
+        // Set the current screen to MapSelectScreen
+        this.setScreen(mapSelectScreen);
     }
 
     /**
@@ -115,11 +159,20 @@ public class MazeRunnerGame extends Game {
         return skin;
     }
 
-    public Animation<TextureRegion> getCharacterDownAnimation() {
-        return characterDownAnimation;
-    }
-
     public SpriteBatch getSpriteBatch() {
         return spriteBatch;
     }
+
+    public Maze getMaze() {
+        return maze;
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
 }
