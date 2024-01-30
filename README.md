@@ -3,7 +3,7 @@
 MazeRunner is a 2D top-down view game built using the libGDX framework. In this game, you navigate through mazes, collect keys, avoid traps and enemies, and aim to reach the exit while preserving your limited lives.
 
 
-![MazeRunner Screenshot](C:\Users\Acer\IdeaProjects\itp2324itp2324projectwork-tue2mu1solikhovazizov\assets\Screenshot_Game.png)
+![MazeRunner Screenshot](assets\Screenshot_Game.png)
 ## Table of Contents
 - [Game Overview](#game-overview)
 - [Features](#features)
