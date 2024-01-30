@@ -13,20 +13,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
  * It handles the player's movement, collisions, animations, and game state.
  */
 public class Player {
-    private String name;
-    private final Animation<TextureRegion> characterWonAnimation;
     private Vector2 position;
-    private Texture playerTexture;
-    private Sprite spritePlayer;
-    private Texture entryTexture;
-    private Sprite spriteEntry;
-    private float playerSpeed = 40f;
-    private boolean isMoving = false;
+    private final Texture playerTexture;
+    private final Sprite spritePlayer;
+    private final Sprite spriteEntry;
+    private final float playerSpeed = 40f;
     private boolean gotKey = false;
     private int lives;
-    private float sinusInput = 0f;
-
-    private float stateTime;
     private Animation<TextureRegion> characterDownAnimation;
     private Animation<TextureRegion> characterUpAnimation;
     private Animation<TextureRegion> characterLeftAnimation;
@@ -44,7 +37,7 @@ public class Player {
 
         this.playerTexture = new Texture(Gdx.files.internal("character.png"));
         this.spritePlayer = new Sprite(playerTexture,0,0,16,32);
-        this.entryTexture = new Texture(Gdx.files.internal("basictiles.png"));
+        Texture entryTexture = new Texture(Gdx.files.internal("basictiles.png"));
         this.spriteEntry = new Sprite(entryTexture,16,16*11,16,16);
         int frameWidth = 16;
         int frameHeight = 32;
@@ -56,9 +49,8 @@ public class Player {
         characterUpAnimation = createAnimation(2, 0,frameWidth, frameHeight, animationFrames);
         characterLeftAnimation = createAnimation(3, 0,frameWidth, frameHeight, animationFrames);
         characterRightAnimation = createAnimation(1, 0,frameWidth, frameHeight, animationFrames);
-        characterWonAnimation = createAnimation(1, 9,frameWidth, frameHeight, animationFrames);
 
-        this.stateTime = 0f;
+
     }
     /**
      * Creates a new animation based on the specified parameters.
@@ -87,7 +79,6 @@ public class Player {
     public void move(float deltaX, float deltaY) {
         position.x += deltaX;
         position.y += deltaY;
-//        currentDirection = getDirection(deltaX, deltaY);
     }
 
     /**
@@ -98,10 +89,11 @@ public class Player {
      * @param y           The y-coordinate for rendering.
      */
 
-    public void render(SpriteBatch spriteBatch, float x, float y) {
-//        TextureRegion currentFrame = getCurrentFrame();
-        spriteBatch.draw(spritePlayer, x, y);
-    }
+//    public void render(SpriteBatch spriteBatch, float x, float y) {
+//        spriteBatch.draw(spritePlayer, x, y);
+//    }
+
+    //@Bu keremasga o'xshidi poka, tekshirib ko'raman. Turib tursin
 
 
     /**
@@ -112,7 +104,6 @@ public class Player {
      * @param y           The y-coordinate for rendering.
      */
     public void renderEntry(SpriteBatch spriteBatch, float x, float y) {
-//        TextureRegion currentFrame = getCurrentFrame();
         spriteBatch.draw(spriteEntry, x, y);
     }
 
@@ -159,8 +150,6 @@ public class Player {
             if (playerRect.overlaps(rect)) {
                 if (lastCollisionTime >= 2.0f) {
                     lives--;
-
-                    System.out.println("TRAP, live-1");
                     lastCollisionTime = 0; // Reset the timer
                     return true; // Collision detected with at least one wall
                 }
@@ -190,8 +179,6 @@ public class Player {
             if (playerRect.overlaps(rect)) {
                 if (lastCollisionTime >= 2.0f) {
                     lives--;
-
-                    System.out.println("ENEMY, live-1");
                     lastCollisionTime = 0; // Reset the timer
                     return true; // Collision detected with at least one wall
                 }
@@ -202,8 +189,6 @@ public class Player {
         if (playerRect.overlaps(rect)) {
             if (lastCollisionTime >= 3.0f) {
                 lives--;
-
-                System.out.println("Yovuz, live-1");
                 lastCollisionTime = 0; // Reset the timer
                 return true; // Collision detected with at least one wall
             }
@@ -268,7 +253,6 @@ public class Player {
             if (playerRect.overlaps(rect)) {
 
                 if (isGotKey()==true&&exit.isClosed()==false)
-                    System.out.println("You won");
                 return true; // Collision detected with at least one wall
             }
         }
@@ -289,10 +273,8 @@ public class Player {
 
             Rectangle rect = new Rectangle(key.getPosition().x, key.getPosition().y, 5, 5);
             if (playerRect.overlaps(rect)) {
-                System.out.println("GOT KEY");
                 return true; // Collision detected with at least one wall
             }
-
 
         return false; // No collision with any wall
     }
@@ -318,12 +300,9 @@ public class Player {
      */
 
     public void update(float deltaTime) {
-        stateTime += deltaTime;
     }
 
     // Dispose, getPosition, setPosition, getPlayerSpeed methods...
-
-
 
     public Vector2 getPosition() {
         return position;
@@ -337,78 +316,25 @@ public class Player {
         return playerSpeed;
     }
 
-    public void setPlayerSpeed(float playerSpeed) {
-        this.playerSpeed = playerSpeed;
-    }
-
-    public Texture getPlayerTexture() {
-        return playerTexture;
-    }
-
-    public void setPlayerTexture(Texture playerTexture) {
-        this.playerTexture = playerTexture;
-    }
-
     public Sprite getSpritePlayer() {
         return spritePlayer;
-    }
-
-    public void setSpritePlayer(Sprite spritePlayer) {
-        this.spritePlayer = spritePlayer;
-    }
-
-    public float getStateTime() {
-        return stateTime;
-    }
-
-    public void setStateTime(float stateTime) {
-        this.stateTime = stateTime;
     }
 
     public Animation<TextureRegion> getCharacterDownAnimation() {
         return characterDownAnimation;
     }
 
-    public void setCharacterDownAnimation(Animation<TextureRegion> characterDownAnimation) {
-        this.characterDownAnimation = characterDownAnimation;
-    }
 
     public Animation<TextureRegion> getCharacterUpAnimation() {
         return characterUpAnimation;
-    }
-
-    public void setCharacterUpAnimation(Animation<TextureRegion> characterUpAnimation) {
-        this.characterUpAnimation = characterUpAnimation;
     }
 
     public Animation<TextureRegion> getCharacterLeftAnimation() {
         return characterLeftAnimation;
     }
 
-    public void setCharacterLeftAnimation(Animation<TextureRegion> characterLeftAnimation) {
-        this.characterLeftAnimation = characterLeftAnimation;
-    }
-
     public Animation<TextureRegion> getCharacterRightAnimation() {
         return characterRightAnimation;
-    }
-
-    public void setCharacterRightAnimation(Animation<TextureRegion> characterRightAnimation) {
-        this.characterRightAnimation = characterRightAnimation;
-    }
-
-
-
-    public Animation<TextureRegion> getCharacterWonAnimation() {
-        return characterWonAnimation;
-    }
-
-    public boolean isMoving() {
-        return isMoving;
-    }
-
-    public void setMoving(boolean moving) {
-        isMoving = moving;
     }
 
     public boolean isGotKey() {
@@ -427,7 +353,4 @@ public class Player {
         this.lives = lives;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

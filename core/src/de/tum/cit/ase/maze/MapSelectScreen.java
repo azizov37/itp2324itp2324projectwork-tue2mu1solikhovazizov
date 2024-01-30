@@ -70,7 +70,7 @@ public class MapSelectScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Open a file chooser dialog for selecting a file from the local computer
-//                selectLocalFile();
+                selectLocalFile();
                 game.setMaze(new Maze(Gdx.files.internal(selectLocalFile()).file().getAbsolutePath()));; // Load the selected level's map
                 game.goToGame(); // Switch to the game screen
             }

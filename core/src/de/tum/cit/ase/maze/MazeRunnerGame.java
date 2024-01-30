@@ -53,7 +53,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Switches to the menu screen.
+     * Switches to the Main menu screen.
      */
     public void goToMenu() {
         menuScreen = new MenuScreen(this);

@@ -52,7 +52,7 @@ public class WonScreen implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.goToMenu(); // Go back to the main menu
+                game.goToMapSelection(); // Go back to the main menu
             }
         });
 

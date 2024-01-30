@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MenuScreen implements Screen {
     private final Stage stage;
 
-    private Player player;
     private String playerName;
 
 
@@ -49,28 +48,14 @@ public class MenuScreen implements Screen {
         table.setFillParent(true); // Make the table fill the stage
         stage.addActor(table); // Add the table to the stage
 
-
-
         // Add a label as a title
         table.add(new Label("Maze Runner", game.getSkin(), "title")).padBottom(80).row();
-
-        // Create and add a button to go to the game screen
-//        TextButton goToGameButton = new TextButton("Go To Game", game.getSkin());
-//        table.add(goToGameButton).width(300).row();
-//
-//        goToGameButton.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                game.goToGame(); // Change to the game screen when button is pressed
-//            }
-//        });
 
         // Add a text field for the player's name
         TextField playerNameTextField = new TextField("", game.getSkin());
         table.add(playerNameTextField).width(300).padBottom(20).row();
 
         Label submitMessageLabel = new Label("Submit Username to start the Game", game.getSkin(), "default");
-//        submitMessageLabel.setColor(Color.PINK); // Set the color to red (you can change it)
         submitMessageLabel.setVisible(false); // Initially, hide the message label
 
         table.add(submitMessageLabel).padBottom(20).row();
@@ -96,8 +81,7 @@ public class MenuScreen implements Screen {
         });
 
 
-
-//        // Set the input processor
+        // Set the input processor
         Gdx.input.setInputProcessor(stage);
     }
 
