@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
  * It extends the GameObject class and provides methods for rendering and updating the exit.
  */
 public class Exit extends GameObject{
-    private Texture textureExit;
+//    private Texture textureExit;
     private Sprite spriteExitClosed;
     private Sprite spriteExitOpen;
 
@@ -28,12 +28,12 @@ public class Exit extends GameObject{
      public Exit(Vector2 position) {
         super(position);
         this.stateTime = 0.0f;
-         this.textureExit = new Texture(Gdx.files.internal("things.png"));
+         super.texture = new Texture(Gdx.files.internal("things.png"));
 
          // Initialize the sprite for this trap
-         this.spriteExitClosed = new Sprite(textureExit,0,0,16,16);
+         this.spriteExitClosed = new Sprite(texture,0,0,16,16);
          // Initialize the sprite for the open exit
-         this.spriteExitOpen = new Sprite(textureExit,0,48,16,16);
+         this.spriteExitOpen = new Sprite(texture,0,48,16,16);
 
          this.closed = true;
      }

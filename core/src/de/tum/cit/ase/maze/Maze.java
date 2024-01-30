@@ -1,43 +1,35 @@
 package de.tum.cit.ase.maze;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 
 /**
  * The Maze class represents the game maze, containing cells with different types.
- * It can be loaded from a file or generated as a default maze.
+ * It can be loaded from a given file.
  */
 public class Maze {
-
-    private static final int DEFAULT_SIZE = 50;
     private Cell[][] cells;
 
 
 
     /**
-     * Constructs a new Maze instance by either loading from a file or generating a default maze.
+     * Constructs a new Maze instance by either loading from a file
      *
-     * @param filePath The path to the file containing maze data. If null or empty, a default maze is generated.
+     * @param filePath The path to the file containing maze data.
      */
     public Maze(String filePath) {
         if (filePath != null && !filePath.isEmpty()) {
             loadMazeFromFileWithBG(filePath);
-        } else {
-            // Generate default maze
-            generateDefaultMaze(DEFAULT_SIZE, DEFAULT_SIZE);
         }
     }
     /**
-     * Loads the maze from a file with background information.
+     * Loads the maze from a file.
      *
-     * @param filePath The path to the file containing maze and background data.
+     * @param filePath The path to the file containing maze and adds background data.
      */
     private void loadMazeFromFileWithBG(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -85,70 +77,22 @@ public class Maze {
             }
         } catch (IOException e) {
             System.out.println("Error loading maze file: " + e.getMessage());
-            generateDefaultMaze(DEFAULT_SIZE, DEFAULT_SIZE);
-        }
-
-        // Loop through each row and column to print the array
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[i].length; j++) {
-                System.out.print(cells[i][j].getType() + " ");
-            }
-            System.out.println(); // New line after each row
-        }
-        }
-
-
-
-
-    /**
-     * Loads the maze from a file without background information.
-     *
-     * @param filePath The path to the file containing maze data.
-     */
-    private void loadMazeFromFile(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            Properties properties = new Properties();
-            properties.load(reader);
-            int maxX = 0, maxY = 0;
-            // Determine the size of the maze
-            for (String key : properties.stringPropertyNames()) {
-                String[] parts = key.split(",");
-                int x = Integer.parseInt(parts[0]);
-                int y = Integer.parseInt(parts[1]);
-                if (x > maxX) maxX = x;
-                if (y > maxY) maxY = y;
-            }
-            // Initialize the cells array
-            cells = new Cell[maxX + 1][maxY + 1];
-            for (String key : properties.stringPropertyNames()) {
-                String[] parts = key.split(",");
-                int x = Integer.parseInt(parts[0]);
-                int y = Integer.parseInt(parts[1]);
-                int cellType = Integer.parseInt(properties.getProperty(key));
-                cells[x][y] = new Cell(cellType, x, y);
-            }
-        } catch (IOException e) {
-            System.out.println("Error loading maze file: " + e.getMessage());
-            generateDefaultMaze(DEFAULT_SIZE, DEFAULT_SIZE);
         }
     }
 
-
-    /**
-     * Generates a default maze with the specified width and height.
+        /**
+     * Gets a specific cell in the maze.
      *
-     * @param width  The width of the maze.
-     * @param height The height of the maze.
+     * @param x The x-coordinate of the cell.
+     * @param y The y-coordinate of the cell.
+     * @return The cell at the specified coordinates or null if out of bounds.
      */
-    private void generateDefaultMaze(int width, int height) {
-        cells = new Cell[width][height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                cells[x][y] = new Cell(0, x, y); // Default to walls
-            }
+    public Cell getCell(int x, int y) {
+        if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight()) {
+            return cells[x][y];
         }
+        return null;
     }
-    // ... rest of the Maze and Cell classes ...
 
     // Method to get the width of the maze
     public int getWidth() {
@@ -164,22 +108,6 @@ public class Maze {
             return cells[0].length;
         }
         return 0;
-    }
-
-    // Method to get a specific cell
-
-    /**
-     * Gets a specific cell in the maze.
-     *
-     * @param x The x-coordinate of the cell.
-     * @param y The y-coordinate of the cell.
-     * @return The cell at the specified coordinates or null if out of bounds.
-     */
-    public Cell getCell(int x, int y) {
-        if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight()) {
-            return cells[x][y];
-        }
-        return null;
     }
 }
 

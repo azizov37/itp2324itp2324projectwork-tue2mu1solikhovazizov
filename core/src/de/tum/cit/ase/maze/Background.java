@@ -11,29 +11,11 @@ import com.badlogic.gdx.math.Vector2;
  * The Background class represents a background element in the game.
  * It provides methods for rendering the background.
  */
-public class Background {
+public class Background extends GameObject{
 
-
-    private Texture textureBackground;  // Texture for the background
     private Sprite spriteBackground;    // Sprite for rendering the background
     private Vector2 position;           // Position of the background
 
-
-
-    /**
-     * Default constructor for the Background class.
-     * Initializes the background with a default position and texture.
-     */
-        public Background() {
-
-            this.position = new Vector2();
-            this.textureBackground = new Texture(Gdx.files.internal("basictiles.png"));
-
-            // Initialize the sprite for this wall
-            // The parameters for the Sprite constructor represent the region of the texture to be used
-            this.spriteBackground = new Sprite(textureBackground, 16, 9*16, 16, 16);
-            this.spriteBackground.setPosition(position.x, position.y);
-        }
 
     /**
      * Constructor for the Background class with a specified position.
@@ -42,9 +24,13 @@ public class Background {
      * @param position The position vector for the background.
      */
     public Background(Vector2 position) {
-        this.textureBackground = textureBackground;
-        this.spriteBackground = spriteBackground;
-        this.position = position;
+        super(position);
+        this.position = new Vector2();
+        super.texture = new Texture(Gdx.files.internal("basictiles.png"));
+
+        // Initialize the sprite for this wall
+        this.spriteBackground = new Sprite(texture, 16, 9*16, 16, 16);
+        this.spriteBackground.setPosition(position.x, position.y);
     }
 
     /**
@@ -65,7 +51,7 @@ public class Background {
      * @param x            The x-coordinate where the background should be rendered.
      * @param y            The y-coordinate where the background should be rendered.
      */
-        public void render(SpriteBatch spriteBatch, float x, float y) {
+    public void render(SpriteBatch spriteBatch, float x, float y) {
             spriteBatch.draw(spriteBackground, x, y);
         }
 

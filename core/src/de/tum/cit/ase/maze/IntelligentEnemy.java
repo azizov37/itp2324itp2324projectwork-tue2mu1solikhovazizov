@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Random;
 
 
 /**
@@ -19,18 +18,17 @@ import java.util.Random;
  */
 public class IntelligentEnemy extends GameObject {
 
-    private Texture textureEnemy;
     private Sprite spriteEnemy;
     private Sprite spriteEnemySleeping;
     private Animation<TextureRegion> moveAnimation; // Animation for movement
-    private float speed; // Speed at which the enemy moves
-    private float detectionRadius; // Radius to detect the player
+    private final float speed; // Speed at which the enemy moves
+    private final float detectionRadius; // Radius to detect the player
     private Vector2 targetPosition; // Position of the player
-    private float moveDuration = 10f; // Adjust this duration as needed
+    private final float moveDuration = 10f; // Adjust this duration as needed
     private float breakDuration = 5f; // Adjust this duration as needed
     private float timer = 0f;
     private float glitchTimer = 0f;
-    private float glitchDuration = 0.1f;
+    private final float glitchDuration = 0.1f;
     private boolean isMoving = true;
     private boolean movingThroughObstacle = false;
     private boolean playerDetected = false;
@@ -43,20 +41,18 @@ public class IntelligentEnemy extends GameObject {
      * @param position The initial position of the enemy.
      */
     public IntelligentEnemy(Vector2 position) {
-
         super(position);
 
-        this.textureEnemy = new Texture(Gdx.files.internal("mobs.png"));
-
-        this.spriteEnemy = new Sprite(textureEnemy, 6*16, 4*16, 16, 16);
-        this.spriteEnemySleeping = new Sprite(textureEnemy, 6*16, 7*16, 16, 16);
+        this.texture = new Texture(Gdx.files.internal("mobs.png"));
+        this.spriteEnemy = new Sprite(texture, 6*16, 4*16, 16, 16);
+        this.spriteEnemySleeping = new Sprite(texture, 6*16, 7*16, 16, 16);
         // Create key animation
         Array<TextureRegion> keyFrames = new Array<>();
 
 
         // Assuming your frames are arranged horizontally in the texture
         for (int i = 0; i < 3; i++) {
-            keyFrames.add(new TextureRegion(textureEnemy, (6 + i)*16, 4*16, 16, 16));
+            keyFrames.add(new TextureRegion(texture, (6 + i)*16, 4*16, 16, 16));
         }
 
         moveAnimation = new Animation<>(0.1f, keyFrames);
@@ -78,64 +74,51 @@ public class IntelligentEnemy extends GameObject {
         float distanceToPlayer = position.dst(playerPosition);
 
 
-
-
         if (distanceToPlayer <= detectionRadius) {
             playerDetected=true;
             if (isMoving) {
 
                 // Set target position as player position
                 targetPosition.set(playerPosition);
-                moveTowardsTarget(deltaTime, walls);
+                moveTowardsTarget(deltaTime);
                 if (isCollidingWithWalls(position,walls)) {
                     movingThroughObstacle=true;
                 }
-
                 if (timer >= moveDuration) {
                     isMoving = false; // Stop moving after the moveDuration
                     timer = 0f;
                 }
-
             }
-
         } else {
-
-            // If not moving, take a break
             if (timer >= breakDuration) {
                 timer = 0f;
                 isMoving=true;
                 playerDetected=false;
             }
         }
-
     }
+
     /**
      * Checks if the enemy has detected the player and is currently moving.
      *
      * @return True if the enemy detected the player and is moving; otherwise, false.
      */
     public boolean checker() {
-        if (playerDetected&&isMoving) {
-            return true;
-        }
-        return false;
+        return playerDetected && isMoving;
     }
 
 
     /**
-     * Moves the enemy towards the target position while avoiding obstacles.
+     * Moves the enemy towards the target position.
      *
      * @param deltaTime The time passed since the last movement update.
-     * @param walls     The array of walls in the game.
-     * @return True if the movement was successful; otherwise, false.
      */
-    private boolean moveTowardsTarget(float deltaTime, Array<Wall> walls) {
+    private void moveTowardsTarget(float deltaTime) {
         // Calculate direction towards target
         Vector2 direction = new Vector2(targetPosition.x - position.x, targetPosition.y - position.y).nor();
         Vector2 newPosition = new Vector2(position).add(direction.scl(speed * deltaTime));
 
         position.set(newPosition); // Update position if no collision
-        return true; // Movement successful
     }
 
 
@@ -156,7 +139,6 @@ public class IntelligentEnemy extends GameObject {
             if (enemyBounds.overlaps(wallBounds)) {
 
                 if (lastCollisionTime >= 0.03f){
-
                     lastCollisionTime = -1.0f; // Reset the timer
                     return true; // Collision detected
                 }
@@ -174,11 +156,9 @@ public class IntelligentEnemy extends GameObject {
      */
     public void render(SpriteBatch batch,float delta) {
         if (movingThroughObstacle) {
-            System.out.println("Not rendered");
-            update(delta);
+             update(delta);
             if (glitchTimer >= glitchDuration) {
-                System.out.println("glitchTimer");
-                movingThroughObstacle = false; // End glitch effect
+                  movingThroughObstacle = false; // End glitch effect
                 glitchTimer = 0;
             }
         } else {
@@ -204,5 +184,5 @@ public class IntelligentEnemy extends GameObject {
         glitchTimer += deltaTime;
     }
 
-    // Additional methods like getters, setters, dispose, etc.
+
 }

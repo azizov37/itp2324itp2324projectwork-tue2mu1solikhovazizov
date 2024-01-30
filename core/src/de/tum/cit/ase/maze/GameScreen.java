@@ -339,7 +339,7 @@ public class GameScreen implements Screen {
         stage.addActor(table);
     }
 
-    private void restart() {
+    public void restart() {
         // Restart the game
         key.setVisible(true);
         player.setGotKey(false);

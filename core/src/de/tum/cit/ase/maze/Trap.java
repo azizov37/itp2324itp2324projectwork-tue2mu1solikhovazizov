@@ -17,9 +17,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Trap extends GameObject{
 
-    private Texture textureTrap;
-    private Sprite spriteTrap;
-    private Animation<TextureRegion> trapAnimation;
+    private final Sprite spriteTrap;
+    private final Animation<TextureRegion> trapAnimation;
     private float stateTime;
 
     /**
@@ -29,10 +28,10 @@ public class Trap extends GameObject{
     */
     public Trap(Vector2 position) {
         super(position);
-        this.textureTrap = new Texture(Gdx.files.internal("objects.png"));
+        this.texture = new Texture(Gdx.files.internal("objects.png"));
 
         // Initialize the sprite for this trap
-        this.spriteTrap = new Sprite(textureTrap,64,48,16,16);
+        this.spriteTrap = new Sprite(texture,64,48,16,16);
         this.spriteTrap.setPosition(position.x, position.y);
 
         // Create trap animation
@@ -42,7 +41,7 @@ public class Trap extends GameObject{
 
         // Assuming your frames are arranged horizontally in the texture
         for (int i = 0; i < 7; i++) {
-            trapFrames.add(new TextureRegion(textureTrap, 64+(i * frameWidth), 48, frameWidth, frameHeight));
+            trapFrames.add(new TextureRegion(texture, 64+(i * frameWidth), 48, frameWidth, frameHeight));
         }
 
         trapAnimation = new Animation<>(0.1f, trapFrames);
@@ -91,7 +90,6 @@ public class Trap extends GameObject{
      */
     public void dispose() {
         super.dispose(); // Dispose of the base GameObject resources
-        textureTrap.dispose();
     }
 
 }

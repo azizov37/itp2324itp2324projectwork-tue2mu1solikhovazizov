@@ -4,10 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+
 
 
 /**
@@ -34,35 +32,6 @@ public class Wall extends GameObject{
         // Initialize the sprite for this wall
         this.spriteWall = new Sprite(textureWall, 32, 0, 16, 16);
         this.spriteWallBack = new Sprite(textureWall, 48, 0, 16, 16);
-//        this.isBackWall = false;
-
-
-        this.spriteWall.setPosition(position.x, position.y);
-
-    }
-
-    /**
-     * Constructs a new Wall object with the option to specify whether it is a back wall.
-     *
-     * @param position   The position of the wall in the game world.
-     * @param isBackWall A boolean indicating whether it is a back wall.
-     */
-
-    public Wall(Vector2 position, boolean isBackWall) {
-        super(position);
-        this.textureWall = new Texture(Gdx.files.internal("basictiles.png"));
-
-        // Initialize the sprite for this wall
-        if (isBackWall==false){
-            this.spriteWall = new Sprite(textureWall, 48, 0, 16, 16);
-            System.out.println("Front is rendered in "+position.x+" " + position.y);
-        } else if (isBackWall==true) {
-            this.spriteWall = new Sprite(textureWall, 0, 0, 16, 16);
-            System.out.println("Back is rendered in "+position.x+" " + position.y);
-        }
-//        this.spriteWallBack = new Sprite(textureWall, 0, 0, 16, 16);
-
-
 
         this.spriteWall.setPosition(position.x, position.y);
 
@@ -121,28 +90,8 @@ public class Wall extends GameObject{
         textureWall.dispose();
     }
 
-    public Sprite getSpriteWall() {
-        return spriteWall;
-    }
-
-    public void setSpriteWall(Sprite spriteWall) {
-        this.spriteWall = spriteWall;
-    }
-
-    public boolean isBackWall() {
-        return isBackWall;
-    }
-
     public void setBackWall(boolean backWall) {
         isBackWall = backWall;
-    }
-
-    public Sprite getSpriteWallBack() {
-        return spriteWallBack;
-    }
-
-    public void setSpriteWallBack(Sprite spriteWallBack) {
-        this.spriteWallBack = spriteWallBack;
     }
 }
 

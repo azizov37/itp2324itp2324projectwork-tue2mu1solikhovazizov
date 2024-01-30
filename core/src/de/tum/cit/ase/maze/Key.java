@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Key extends GameObject{
 
-        private Texture textureKey;
         private Sprite spriteKey;
         private Animation<TextureRegion> keyAnimation;
         private float stateTime;
@@ -29,10 +28,10 @@ public class Key extends GameObject{
      */
     public Key(Vector2 position) {
             super(position);
-            this.textureKey = new Texture(Gdx.files.internal("objects.png"));
+            super.texture = new Texture(Gdx.files.internal("objects.png"));
 
             // Initialize the sprite for this key
-            this.spriteKey = new Sprite(textureKey,0,64,16,16);
+            this.spriteKey = new Sprite(texture,0,64,16,16);
             this.spriteKey.setPosition(position.x, position.y);
 
             // Create key animation
@@ -42,7 +41,7 @@ public class Key extends GameObject{
 
             // Assuming your frames are arranged horizontally in the texture
             for (int i = 0; i < 4; i++) {
-            keyFrames.add(new TextureRegion(textureKey, i * frameWidth, 64, frameWidth, frameHeight));
+            keyFrames.add(new TextureRegion(texture, i * frameWidth, 64, frameWidth, frameHeight));
             }
 
             keyAnimation = new Animation<>(0.1f, keyFrames);
@@ -74,8 +73,6 @@ public class Key extends GameObject{
             TextureRegion currentFrame = keyAnimation.getKeyFrame(stateTime, true);
 
             spriteBatch.draw(currentFrame, x, y);
-        } else {
-
         }
     }
 
@@ -86,7 +83,6 @@ public class Key extends GameObject{
      */
         public void dispose() {
             super.dispose(); // Dispose of the base GameObject resources
-            textureKey.dispose();
         }
 
     public boolean isVisible() {

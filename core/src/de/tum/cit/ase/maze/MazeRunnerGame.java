@@ -140,9 +140,6 @@ public class MazeRunnerGame extends Game {
         // Create the MapSelectScreen before setting the player name
         MapSelectScreen mapSelectScreen = new MapSelectScreen(this);
 
-        // Set the player name in the MapSelectScreen
-        mapSelectScreen.setPlayerName(playerName);
-
         // Set the current screen to MapSelectScreen
         this.setScreen(mapSelectScreen);
     }

@@ -1,7 +1,6 @@
 package de.tum.cit.ase.maze;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,8 +22,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class MapSelectScreen implements Screen {
     private final Stage stage;
-    private final MazeRunnerGame game;
-    private String playerName;
 
 
     /**
@@ -33,7 +30,6 @@ public class MapSelectScreen implements Screen {
      * @param game The MazeRunnerGame instance.
      */
     public MapSelectScreen(MazeRunnerGame game) {
-        this.game = game;
         var camera = new OrthographicCamera();
         camera.zoom = 1.0f;
 
@@ -57,7 +53,7 @@ public class MapSelectScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     String mapFilePath = "maps/level-"+level+".properties"; // Set the path for the selected level
                     System.out.println(level+" is created for Maze");
-                    game.setMaze(new Maze(Gdx.files.internal(mapFilePath).file().getAbsolutePath()));; // Load the selected level's map
+                    game.setMaze(new Maze(Gdx.files.internal(mapFilePath).file().getAbsolutePath())); // Load the selected level's map
                     game.goToGame(); // Switch to the game screen
                 }
             });
@@ -71,7 +67,7 @@ public class MapSelectScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 // Open a file chooser dialog for selecting a file from the local computer
                 selectLocalFile();
-                game.setMaze(new Maze(Gdx.files.internal(selectLocalFile()).file().getAbsolutePath()));; // Load the selected level's map
+                game.setMaze(new Maze(Gdx.files.internal(selectLocalFile()).file().getAbsolutePath())); // Load the selected level's map
                 game.goToGame(); // Switch to the game screen
             }
         });
@@ -141,9 +137,5 @@ public class MapSelectScreen implements Screen {
 
     @Override
     public void hide() {
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 }

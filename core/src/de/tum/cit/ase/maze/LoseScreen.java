@@ -54,16 +54,6 @@ public class LoseScreen implements Screen {
             }
         });
 
-        TextButton restartButton = new TextButton("Restart", game.getSkin());
-        table.add(restartButton).width(300);
-        restartButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.goToGame();
-
-            }
-        });
-
         Texture walkSheet = new Texture(Gdx.files.internal("character.png"));
 
         int frameWidth = 16;

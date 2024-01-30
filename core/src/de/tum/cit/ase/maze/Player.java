@@ -82,21 +82,6 @@ public class Player {
     }
 
     /**
-     * Renders the player character.
-     *
-     * @param spriteBatch The sprite batch used for rendering.
-     * @param x           The x-coordinate for rendering.
-     * @param y           The y-coordinate for rendering.
-     */
-
-//    public void render(SpriteBatch spriteBatch, float x, float y) {
-//        spriteBatch.draw(spritePlayer, x, y);
-//    }
-
-    //@Bu keremasga o'xshidi poka, tekshirib ko'raman. Turib tursin
-
-
-    /**
      * Renders the entry point.
      *
      * @param spriteBatch The sprite batch used for rendering.
@@ -204,10 +189,7 @@ public class Player {
      * @return True if the player has lost, false otherwise.
      */
     public boolean playerLost(){
-        if (lives<=0){
-            return true;
-        }
-        return false;
+        return lives <= 0;
     }
 
 
@@ -226,11 +208,8 @@ public class Player {
 
             if (playerRect.overlaps(rect)) {
 
-                if (exit.isClosed()==false) {
-                    return false;
-                } else {
-                    return true; // Collision detected with at least one wall
-                }
+                // Collision detected with at least one wall
+                return exit.isClosed();
             }
         }
 
@@ -252,8 +231,9 @@ public class Player {
 
             if (playerRect.overlaps(rect)) {
 
-                if (isGotKey()==true&&exit.isClosed()==false)
-                return true; // Collision detected with at least one wall
+                if (isGotKey() && !exit.isClosed()) {
+                    return true; // Collision detected with at least one wall
+                }
             }
         }
 
@@ -272,11 +252,8 @@ public class Player {
 
 
             Rectangle rect = new Rectangle(key.getPosition().x, key.getPosition().y, 5, 5);
-            if (playerRect.overlaps(rect)) {
-                return true; // Collision detected with at least one wall
-            }
-
-        return false; // No collision with any wall
+        return playerRect.overlaps(rect); // Collision detected with at least one wall
+// No collision with any wall
     }
 
 
