@@ -52,11 +52,38 @@ https://github.com/your-username/MazeRunner.git
 
 ## Game Mechanics
 - **Maze Structure:** The maze consists of walls and paths. The entrance and exit are distinguishable, and exits are located on the outer border of the maze.
-- **Character:** You control the main character, which has limited lives. The character must collect at least one key to use the exit.
-- **Obstacles:** The maze contains static traps and dynamic enemies. Contact with these obstacles causes the character to lose a life.
+- **Character:** You control the main character, which has limited lives. 
+The character must collect at least one key to use the exit. Character is controlled using arrow keys, movement in diagonal direction is not possible.
+- **Obstacles.** The maze in this game features two types of obstacles:
+  1. **Static Traps:** These are stationary obstacles placed within the maze. When the character comes into contact with a static trap, they lose a life.
+
+  2. **Dynamic Enemies:** Dynamic enemies are mobile obstacles that move in random directions within the maze. They continue moving until they encounter an obstacle, which can be a wall, trap, or exit. Alternatively, dynamic enemies may move a certain distance in their current direction before choosing a new random direction to continue their movement.
+    - These obstacles add complexity and challenge to the gameplay, requiring the player to navigate carefully to avoid losing lives when encountering traps or dynamic enemies.
+
 - **Keys:** Collect keys to unlock the exit. Attempting to exit without a key will block the path.
-- **HUD:** The HUD displays the number of lives remaining and whether a key has been collected.
-- **Game Menu:** Access the game menu to continue, start a new game with a different maze, or exit the game.
+- **HUD:** The HUD displays the number of lives remaining and whether a key has been collected as well as Player's name. 
+- **Game Menus.** Access the game menu to continue, start a new game with a different maze, or exit the game.
+
+  - **Main Menu**
+    The Main Menu is the initial screen where the player can perform the following actions:
+    - Enter a player name (mandatory to start the game).
+  - **Map Selection Menu**
+  The Map Selection Menu allows the player to:
+    - Choose a game level from predefined maze options.
+    - Upload a custom maze file if desired.
+  - **In-Game Pause Menu**
+  While playing the game, the player can access the Pause Menu by pressing SPACE key, where they can:
+    - Resume the game.
+    - Return to the Main Menu.
+    - Restart the current game level.
+  - **Game Over Menu**
+  When the player loses the game, they are taken to the Game Over Menu, where they can:
+    - Return to the Map Selection Menu to start a new game.
+    - Choose a different game level from the Map Selection Menu.
+  - **Victory Menu**
+  Upon winning the game, the player is presented with the Victory Menu, where they can:
+    - Return to the Map Select  Menu to start a new game.
+- 
 - **Victory and Game Over:** Win the game by reaching the exit without losing all lives. If you lose all lives, the game is over, and you can return to the main menu.
 
 ## Extensions
