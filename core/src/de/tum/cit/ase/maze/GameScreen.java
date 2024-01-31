@@ -32,6 +32,10 @@ public class GameScreen implements Screen {
 
 
     //Updated @Abdul
+
+    private OrthographicCamera hudCamera;
+    private SpriteBatch hudSpriteBatch;
+
     private AudioManager audioManager;
     private Player player;
     private String playerName;
@@ -162,6 +166,11 @@ public class GameScreen implements Screen {
         heartTextureRegion = new Sprite(spriteSheet, 16*4, 0, 16,16);
 
         player.cheating(game.getPlayerName());
+
+        // Create a camera and sprite batch for the HUD
+        hudCamera = new OrthographicCamera();
+        hudCamera.setToOrtho(false);
+        hudSpriteBatch = new SpriteBatch();
     }
 
 
@@ -229,7 +238,7 @@ public class GameScreen implements Screen {
                 yovuz.render(game.getSpriteBatch(),delta);
                 update(delta);
 
-                renderHUD();
+//                renderHUD();
                 if (playerDamage){
                 audioManager.playLifeLostSound();
                 }
@@ -282,7 +291,16 @@ public class GameScreen implements Screen {
 
         game.getSpriteBatch().end(); // Important to call this after drawing everything
 
+        hudSpriteBatch.setProjectionMatrix(hudCamera.combined);
+        hudCamera.position.set(player.getPosition(), 0);
+        hudCamera.zoom=0.2f;
+        hudSpriteBatch.begin();
 
+        // Render HUD elements here
+        // For example, you can use hudSpriteBatch to draw HUD components
+        renderHUD();
+
+        hudSpriteBatch.end();
     }
 
     private void renderPauseMessage() {
@@ -339,7 +357,7 @@ public class GameScreen implements Screen {
         stage.addActor(table);
     }
 
-    public void restart() {
+    private void restart() {
         // Restart the game
         key.setVisible(true);
         player.setGotKey(false);
@@ -347,39 +365,6 @@ public class GameScreen implements Screen {
             exit.setClosed(true);
         }
         player.setLives(5);
-    }
-
-    private void renderWonMessage() {
-        GlyphLayout layout = new GlyphLayout(font, "YOU WON");
-        float x = camera.position.x - layout.width / 2;
-        float y = (camera.position.y + layout.height) -10;
-
-        font.draw(game.getSpriteBatch(), "YOU WON", x,y);
-
-
-    }
-
-
-    private void renderLoseMessage() {
-
-
-//        float newScale = camera.zoom+0.3f; // Set your desired scale factor
-//        font.getData().setScale(newScale); // Scale the font
-
-        GlyphLayout layout = new GlyphLayout(font, "GAME OVER");
-        float x = camera.position.x - layout.width / 2;
-        float y = (camera.position.y + layout.height) - 10;
-
-        font.draw(game.getSpriteBatch(), layout, x, y);
-
-        GlyphLayout layoutsmall = new GlyphLayout(font, "Press ESC to go to Menu");
-
-        x = camera.position.x - layoutsmall.width / 2;
-        y = (camera.position.y + layout.height) - 30;
-
-        font.draw(game.getSpriteBatch(), layoutsmall, x, y);
-
-
     }
 
     public void mazeRender(Maze maze, SpriteBatch batch, int cellSize) {
@@ -400,26 +385,39 @@ public class GameScreen implements Screen {
 
     private void renderHUD() {
 
-        Vector2 initial = new Vector2(player.getPosition());
-        float yPosition= initial.y+70;
-
-        // Draw hearts for lives
 
         for (int i = 0; i < player.getLives(); i++) {
-            game.getSpriteBatch().draw(heartTextureRegion, initial.x+(i*16)-30, yPosition);
+            // Scale the heart texture to be larger (e.g., 2 times the original size)
+            float scale = 3.0f; // Adjust the scale factor as needed
+            hudSpriteBatch.draw(
+                    heartTextureRegion,
+                    (i * 50) + 600,
+                    800,
+                    heartTextureRegion.getRegionWidth() * scale,
+                    heartTextureRegion.getRegionHeight() * scale
+            );
         }
+
         if (!key.isVisible()) {
-            game.getSpriteBatch().draw(key.getSpriteKey(), initial.x - 50, yPosition);
+            // Scale the key texture to be larger (e.g., 2 times the original size)
+            float scale = 3.5f; // Adjust the scale factor as needed
+            hudSpriteBatch.draw(
+                    key.getSpriteKey(),
+                    560,
+                    795,
+                    key.getSpriteKey().getWidth() * scale,
+                    key.getSpriteKey().getHeight() * scale
+            );
         }
 
         float oldX = font.getScaleX();
         float oldY = font.getScaleY();
 
-        float newScale = 0.2f;
+        float newScale = 1.2f;
         String message = "PLAYER: " + game.getPlayerName();
         font.getData().setScale(newScale);
 
-        font.draw(game.getSpriteBatch(), message, initial.x-150, yPosition+10);
+        font.draw(hudSpriteBatch, message, 10, 840);
 
         font.getData().setScale(oldX,oldY);
 
@@ -474,7 +472,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stageViewport.update(width, height);
+//        stageViewport.update(width, height);
         camera.setToOrtho(false);
 //        hud.resize(width, height);
 
