@@ -108,7 +108,6 @@ public class Player {
         for (Wall wall : walls) {
             Rectangle wallRect = new Rectangle(wall.getPosition().x, wall.getPosition().y, 12, 12);
             if (playerRect.overlaps(wallRect)) {
-                System.out.println("Collision detected at: Player [" + position.x + ", " + position.y + "] Wall [" + wall.getPosition().x + ", " + wall.getPosition().y + "]");
                 return true; // Collision detected with at least one wall
             }
         }
