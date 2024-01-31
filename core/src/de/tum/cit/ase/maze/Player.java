@@ -135,12 +135,12 @@ public class Player {
                 if (lastCollisionTime >= 2.0f) {
                     lives--;
                     lastCollisionTime = 0; // Reset the timer
-                    return true; // Collision detected with at least one wall
+                    return true; // Collision detected with at least one trap
                 }
             }
         }
 
-        return false; // No collision with any wall
+        return false; // No collision with any trap
     }
 
 
@@ -164,7 +164,7 @@ public class Player {
                 if (lastCollisionTime >= 2.0f) {
                     lives--;
                     lastCollisionTime = 0; // Reset the timer
-                    return true; // Collision detected with at least one wall
+                    return true; // Collision detected with at least one enemy
                 }
             }
         }
@@ -174,9 +174,9 @@ public class Player {
             if (lastCollisionTime >= 3.0f) {
                 lives--;
                 lastCollisionTime = 0; // Reset the timer
-                return true; // Collision detected with at least one wall
+                return true; // Collision detected with at least one enemy
             }
-        return false; // No collision with any wall
+        return false; // No collision with any enemy
         }
         return false;
     }
@@ -207,12 +207,12 @@ public class Player {
 
             if (playerRect.overlaps(rect)) {
 
-                // Collision detected with at least one wall
+                // Collision detected with at least one exit
                 return exit.isClosed();
             }
         }
 
-        return false; // No collision with any wall
+        return false; // No collision with any exit
     }
 
     /**
@@ -231,12 +231,12 @@ public class Player {
             if (playerRect.overlaps(rect)) {
 
                 if (isGotKey() && !exit.isClosed()) {
-                    return true; // Collision detected with at least one wall
+                    return true; // Collision detected with at least one exit
                 }
             }
         }
 
-        return false; // No collision with any wall
+        return false; // No collision with any exit
     }
 
     /**
@@ -251,8 +251,8 @@ public class Player {
 
 
             Rectangle rect = new Rectangle(key.getPosition().x, key.getPosition().y, 5, 5);
-        return playerRect.overlaps(rect); // Collision detected with at least one wall
-// No collision with any wall
+        return playerRect.overlaps(rect); // Collision detected with at least one key
+// No collision with any key
     }
 
 
