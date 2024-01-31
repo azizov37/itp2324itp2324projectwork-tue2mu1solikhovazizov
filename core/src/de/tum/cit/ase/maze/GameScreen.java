@@ -70,7 +70,6 @@ public class GameScreen implements Screen {
 
         // Get the font from the game's skin
         font = game.getSkin().getFont("font");
-        font.getData().setScale(camera.zoom+0.3f);
 
         // Initialize the stage and create a viewport for the stage
         Viewport stageViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Use FitViewport
