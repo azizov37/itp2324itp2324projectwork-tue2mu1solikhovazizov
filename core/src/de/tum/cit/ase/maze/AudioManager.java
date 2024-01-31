@@ -29,13 +29,13 @@ public class AudioManager {
         // Load background music and set it to loop
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("background.mp3"));
         backgroundMusic.setLooping(true);
-        gameBackgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("game_background.mp3"));
+        gameBackgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("game_background.mp3")); //Source: zapsplat.net
         gameBackgroundMusic.setLooping(true);
 
         gameBackgroundMusic.setVolume(0.02f);
         backgroundMusic.setVolume(0.01f);
 
-        // Load sound effects
+        // Load sound effects (Source for all: zapsplat.net)
         lifeLostSound = Gdx.audio.newSound(Gdx.files.internal("life_lost.mp3"));
         keyCollectedSound = Gdx.audio.newSound(Gdx.files.internal("key_collect.mp3"));
         doorOpens = Gdx.audio.newSound(Gdx.files.internal("door_opens.mp3"));

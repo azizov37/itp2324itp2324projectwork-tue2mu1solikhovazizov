@@ -23,50 +23,35 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * It handles the game logic and rendering of the game elements.
  */
 public class GameScreen implements Screen {
-
     private final MazeRunnerGame game;
     private final OrthographicCamera camera;
     private final BitmapFont font;
-
     private float sinusInput = 0f;
-
-
-    //Updated @Abdul
-
     private OrthographicCamera hudCamera;
     private SpriteBatch hudSpriteBatch;
 
     private AudioManager audioManager;
     private Player player;
-    private String playerName;
 
     private IntelligentEnemy yovuz;
 
     private float glitchTimer = 0f;
     private float winInterval = 0.5f;
     private boolean playerDamage = false;
-    private final float glitchDuration = 0.1f; //
 
     private Maze maze;
 
-
     private Stage stage;
-    private Viewport stageViewport; // Add this line
-
 
     private int cellSize = 16; // Adjust the cell size as needed
     private boolean paused = false;
-    private boolean usernameNotSubmitted = true;
     private Array<Wall> walls;
     private Array<Trap> traps;
     private Array<Enemy> enemies;
     private Array<Exit> exits;
     private Key key;
 
-//    //HuD
-    private Texture spriteSheet;
     private Sprite heartTextureRegion;
-
 
 
     /**
@@ -87,16 +72,11 @@ public class GameScreen implements Screen {
         font = game.getSkin().getFont("font");
         font.getData().setScale(camera.zoom+0.3f);
 
-        //Updated @Abdul
-
         // Initialize the stage and skin
-        stageViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Use FitViewport
+        // Add this line
+        Viewport stageViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Use FitViewport
         stage = new Stage(stageViewport);
         Gdx.input.setInputProcessor(stage);
-
-//        // Initialize the stage and skin
-//        stage = new Stage();
-//        Gdx.input.setInputProcessor(stage);
 
         this.audioManager = new AudioManager();
         this.player = new Player(new Vector2());
@@ -162,7 +142,8 @@ public class GameScreen implements Screen {
         this.yovuz = new IntelligentEnemy(new Vector2(key.getPosition().x,key.getPosition().y));
 
 
-        spriteSheet = new Texture(Gdx.files.internal("objects.png"));
+        //  HUD textures
+        Texture spriteSheet = new Texture(Gdx.files.internal("objects.png"));
         heartTextureRegion = new Sprite(spriteSheet, 16*4, 0, 16,16);
 
         player.cheating(game.getPlayerName());
@@ -173,11 +154,11 @@ public class GameScreen implements Screen {
         hudSpriteBatch = new SpriteBatch();
     }
 
-
-
-
-
-    // Screen interface methods with necessary functionality
+    /**
+     * Renders the game screen and handles game logic.
+     *
+     * @param delta The time passed since the last frame (in seconds).
+     */
     @Override
     public void render(float delta) {
 
@@ -190,7 +171,6 @@ public class GameScreen implements Screen {
             playerDamage = player.isCollidingWithEnemies(player.getPosition(),enemies,yovuz,delta) || player.isCollidingWithTraps(player.getPosition(),traps,delta);
         }
 
-
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
 
         camera.position.set(player.getPosition().x, player.getPosition().y, 0);
@@ -201,20 +181,8 @@ public class GameScreen implements Screen {
 
         game.getSpriteBatch().begin(); // Important to call this before drawing anything
 
-
         sinusInput += delta;
 
-
-//        // Set the projection matrix to ensure the text is rendered in screen coordinates
-//        game.getSpriteBatch().setProjectionMatrix(camera.combined);
-
-
-
-
-//
-
-
-//            playerRender(delta);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = true; // Pause the game when the spacebar is pressed
 
@@ -222,73 +190,39 @@ public class GameScreen implements Screen {
             paused = false; // Resume the game when Backspace is pressed
         }
 
-//        hud.render(game.getSpriteBatch(),key,player);
-
         if (!paused) {
-
-
-//            if (playerName != null && !playerName.isEmpty()) {
-//                float i = player.getPosition().x; // Adjust the X position as needed
-//                float j = player.getPosition().y + 10; // Adjust the Y position as needed
-//                font.draw(game.getSpriteBatch(), playerName, i, j);
-//            }
-
             if (!player.playerLost()) {
                 mazeRender(maze,game.getSpriteBatch(),cellSize);
                 yovuz.render(game.getSpriteBatch(),delta);
                 update(delta);
-
-//                renderHUD();
                 if (playerDamage){
                 audioManager.playLifeLostSound();
                 }
                 if (player.playerWon(player.getPosition(),exits)) {
-
-
                     winInterval-=delta;
                     if (winInterval<=0){
                         audioManager.playVictorySound();
                         paused=true;
                     }
                 }
-
                 handleInput(delta);
             }else  {
-
-//                renderLoseMessage();
                 game.goToloseMenu();
                 audioManager.playGameOverSound();
-
-
             }
-
         }
-
         if (yovuz.checker()) {
             audioManager.playGhostSound();
         }
-
-
         if (paused) {
 
             if (player.playerWon(player.getPosition(),exits)) {
-//                renderWonMessage();
                 game.goToWonMenu();
             } else {
                 stage.act(); // Update the stage
                 stage.draw(); // Draw the stage (buttons)
             }
-
-
-
         }
-//        player.isCollidingWithExits(player.getPosition(),exits);
-//
-//        player.isCollidingWithKey(player.getPosition(),key);
-
-
-
-
         game.getSpriteBatch().end(); // Important to call this after drawing everything
 
         hudSpriteBatch.setProjectionMatrix(hudCamera.combined);
@@ -299,19 +233,12 @@ public class GameScreen implements Screen {
         // Render HUD elements here
         // For example, you can use hudSpriteBatch to draw HUD components
         renderHUD();
-
         hudSpriteBatch.end();
     }
 
-    private void renderPauseMessage() {
-        GlyphLayout layout = new GlyphLayout(font, "PAUSED");
-        float x = camera.position.x - layout.width / 2;
-        float y = (camera.position.y + layout.height) -10;
-
-        font.draw(game.getSpriteBatch(), "PAUSED", x,y);
-
-    }
-
+    /**
+     * Initializes the pause menu with resume, main menu, and restart buttons.
+     */
     private void setupPauseMenu() {
         Table table = new Table();
         table.setFillParent(true); // Makes the table the size of the stage
@@ -343,9 +270,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 restart();
-
                 game.setScreen(new GameScreen(game)); // Create a new GameScreen
-
             }
         });
 
@@ -353,10 +278,12 @@ public class GameScreen implements Screen {
         table.add(resumeButton).padBottom(20).row();
         table.add(mainMenuButton).padBottom(20).row();
         table.add(restartButton);
-
         stage.addActor(table);
     }
 
+    /**
+     * Restarts the game by resetting key, player state, and exit state.
+     */
     private void restart() {
         // Restart the game
         key.setVisible(true);
@@ -367,6 +294,13 @@ public class GameScreen implements Screen {
         player.setLives(5);
     }
 
+    /**
+     * Renders the maze using the specified batch and cell size.
+     *
+     * @param maze      The maze to be rendered.
+     * @param batch     The sprite batch to render with.
+     * @param cellSize  The size of each cell in pixels.
+     */
     public void mazeRender(Maze maze, SpriteBatch batch, int cellSize) {
         for (int x = 0; x < maze.getWidth(); x++) {
             for (int y = 0; y < maze.getHeight(); y++) {
@@ -376,16 +310,17 @@ public class GameScreen implements Screen {
                     float cellX = x * cellSize;
                     float cellY = y * cellSize;
                     cell.render(batch, cellX, cellY);
-
-
                 }
             }
         }
     }
 
+    /**
+     * Renders the Heads-Up Display (HUD) elements on the screen.
+     * This method displays the player's remaining lives as hearts, the key if it's collected, and the player's name.
+     * Hearts and the key are scaled to render in visible ratio with the rest objects.
+     */
     private void renderHUD() {
-
-
         for (int i = 0; i < player.getLives(); i++) {
             // Scale the heart texture to be larger (e.g., 2 times the original size)
             float scale = 3.0f; // Adjust the scale factor as needed
@@ -403,7 +338,7 @@ public class GameScreen implements Screen {
             float scale = 3.5f; // Adjust the scale factor as needed
             hudSpriteBatch.draw(
                     key.getSpriteKey(),
-                    560,
+                    540,
                     795,
                     key.getSpriteKey().getWidth() * scale,
                     key.getSpriteKey().getHeight() * scale
@@ -423,87 +358,34 @@ public class GameScreen implements Screen {
 
     }
 
-    private void updateHUD( int width, int height) {
-
-    }
-
-
+    /**
+     * Updates game elements (e.g., key, enemies, traps, walls, player).
+     *
+     * @param delta The time passed since the last frame (in seconds).
+     */
     private void update(float delta) {
-
         key.update(delta);
         audioManager.update(delta);
-
-
-
         for (Enemy enemy : enemies) {
-//            enemy.update(delta);
-
             enemy.update(delta, exits, walls,traps);
-
             enemy.render(game.getSpriteBatch(),delta);
-
-
-
-
         }
-
         for (Trap trap : traps) {
-
             trap.update(delta);
-
-
         }
         for (Wall wall : walls) {
-
             wall.update(delta);
-
-
         }
 
         player.update(delta);
         yovuz.update(delta,player.getPosition(),walls);
-
     }
 
-
-
-
-
-
-    @Override
-    public void resize(int width, int height) {
-//        stageViewport.update(width, height);
-        camera.setToOrtho(false);
-//        hud.resize(width, height);
-
-
-//        stage.getViewport().update(width, height, true);
-
-
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void show() {
-        setupPauseMenu();
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        audioManager.dispose();
-    }
-
+    /**
+     * Initializes the player's starting position based on the maze configuration.
+     *
+     * @param maze The maze containing player's initial position.
+     */
     private void initializePlayer(Maze maze) {
         for (int x = 0; x < maze.getWidth(); x++) {
             for (int y = 0; y < maze.getHeight(); y++) {
@@ -518,9 +400,11 @@ public class GameScreen implements Screen {
         }
     }
 
-    // Additional methods and logic can be added as needed for the game screen
-
-
+    /**
+     * Handles player input and moves the player character.
+     *
+     * @param delta The time passed since the last frame (in seconds).
+     */
     private void handleInput(float delta) {
         if (player == null) {
             return; // Player not initialized
@@ -532,6 +416,8 @@ public class GameScreen implements Screen {
 
         if (playerDamage) {
             glitchTimer += delta;
+            //
+            float glitchDuration = 0.1f;
             if (glitchTimer >= glitchDuration) {
                 playerDamage = false; // End glitch effect
                 glitchTimer = 0;
@@ -577,12 +463,7 @@ public class GameScreen implements Screen {
                 for (Exit exit : exits) {
                     exit.setClosed(false);
                 }
-                System.out.println("This case");
             }
-
-
-
-
 
             // Check if moving in the new direction would cause a collision
             if (!player.isCollidingWithWalls(new Vector2(player.getPosition().x + deltaX, player.getPosition().y + deltaY), walls) &&
@@ -599,19 +480,40 @@ public class GameScreen implements Screen {
 
                 if (!isMoving && !playerDamage) {
                     game.getSpriteBatch().draw(player.getSpritePlayer(), player.getPosition().x, player.getPosition().y);
-
                 }
-
-
-
         }
-
-
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+    /**
+     * Called when the screen is resized, adjusting camera and HUD.
+     *
+     * @param width  The new width of the screen.
+     * @param height The new height of the screen.
+     */
+    @Override
+    public void resize(int width, int height) {
+        camera.setToOrtho(false);
     }
 
+    @Override
+    public void pause() {
+    }
 
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void show() {
+        setupPauseMenu();
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+        audioManager.dispose();
+    }
 }
