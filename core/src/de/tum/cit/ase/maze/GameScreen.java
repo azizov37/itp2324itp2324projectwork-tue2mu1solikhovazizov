@@ -72,12 +72,12 @@ public class GameScreen implements Screen {
         font = game.getSkin().getFont("font");
         font.getData().setScale(camera.zoom+0.3f);
 
-        // Initialize the stage and skin
-        // Add this line
+        // Initialize the stage and create a viewport for the stage
         Viewport stageViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Use FitViewport
         stage = new Stage(stageViewport);
         Gdx.input.setInputProcessor(stage);
 
+        // Initialize audio manager, player, walls, enemies, traps, and exits
         this.audioManager = new AudioManager();
         this.player = new Player(new Vector2());
         this.walls = new Array<Wall>();
@@ -85,67 +85,74 @@ public class GameScreen implements Screen {
         this.traps = new Array<Trap>();
         this.exits = new Array<Exit>();
 
+        // Get the maze from the game
         this.maze = game.getMaze();
 
+        // Initialize the player and game elements based on maze cells
         initializePlayer(maze);
 
-
+        // Loop through maze cells and initialize game elements
         for (int x = 0; x < maze.getWidth(); x++) {
             for (int y = 0; y < maze.getHeight(); y++) {
                 Cell cell = maze.getCell(x, y);
                 if (cell != null) {
-                    // Render each cell with the desired size
-                    // Render each cell with the desired size
+                    // Calculate position for rendering based on cell size
                     float cellX = x * cellSize;
                     float cellY = y * cellSize;
 
-                    if (cell.getType()==0||cell.getType()==6) {
-                        Wall temp;
-                        if (cell.getType()==0) {
-                            temp=cell.getWall();
-                        } else {
-                            temp=cell.getWall();
-                            temp.setBackWall(true);
+                    switch (cell.getType()) {
+                        case 0:
+                        case 6:
+                            Wall temp = cell.getWall();
+                            if (cell.getType() == 6) {
+                                temp.setBackWall(true);
+                            }
+                            temp.position.set(cellX, cellY);
+                            walls.add(temp);
+                            break;
 
-                        }
+                        case 2:
+                            Exit exit = cell.getExit();
+                            exit.position.set(cellX, cellY);
+                            exits.add(exit);
+                            break;
 
-                        temp.position.set(cellX,cellY);
-                        walls.add(temp);
-                        }
+                        case 3:
+                            Trap trap = cell.getTrap();
+                            trap.position.set(cellX, cellY);
+                            traps.add(trap);
+                            break;
 
+                        case 4:
+                            Enemy enemy = cell.getEnemy();
+                            enemy.position.set(cellX, cellY);
+                            enemies.add(enemy);
+                            break;
 
-                    if (cell.getType()==2) {
-                        Exit temp=cell.getExit();
-                        temp.position.set(cellX,cellY);
-                        exits.add(temp);
+                        case 5:
+                            key = cell.getKey();
+                            key.setPosition(new Vector2(cellX, cellY));
+                            break;
+
+                        default:
+                            break;
                     }
-                    if (cell.getType()==3) {
-                        Trap temp=cell.getTrap();
-                        temp.position.set(cellX,cellY);
-                        traps.add(temp);
-                    }
-                    if (cell.getType()==4) {
-
-                        Enemy temp=cell.getEnemy();
-                        temp.position.set(cellX,cellY);
-                        enemies.add(temp);
-                    }
-                    if (cell.getType()==5) {
-                        this.key = cell.getKey();
-                        key.setPosition(new Vector2(cellX,cellY));
-                    }
+                    // Add a wall near the player, in case entry is rendered on the corner
                     walls.add(new Wall(new Vector2(player.getPosition().x-16,player.getPosition().y)));
                 }
 
             }
         }
+
+        // Initialize Yovuz based on key's position
         this.yovuz = new IntelligentEnemy(new Vector2(key.getPosition().x,key.getPosition().y));
 
 
-        //  HUD textures
+        // Load HUD textures
         Texture spriteSheet = new Texture(Gdx.files.internal("objects.png"));
         heartTextureRegion = new Sprite(spriteSheet, 16*4, 0, 16,16);
 
+        // Cheating with player's name
         player.cheating(game.getPlayerName());
 
         // Create a camera and sprite batch for the HUD
@@ -162,7 +169,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        // Check for escape key press to go back to the menu
+        // Check for escape key press to go back to the Main menu
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE )) {
             game.goToMenu();
         }
@@ -183,21 +190,32 @@ public class GameScreen implements Screen {
 
         sinusInput += delta;
 
+        // Check if the spacebar is pressed to pause the game
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = true; // Pause the game when the spacebar is pressed
-
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             paused = false; // Resume the game when Backspace is pressed
         }
 
+        // Check if the game is not paused
         if (!paused) {
             if (!player.playerLost()) {
+                // Render the maze and game elements
                 mazeRender(maze,game.getSpriteBatch(),cellSize);
                 yovuz.render(game.getSpriteBatch(),delta);
                 update(delta);
+
+                // Play a sound effect if the player takes damage
                 if (playerDamage){
-                audioManager.playLifeLostSound();
+                    audioManager.playLifeLostSound();
                 }
+
+                //Play a Ghost sound if Intelligent enemy detects Player and starts following
+                if (yovuz.checker()) {
+                    audioManager.playGhostSound();
+                }
+
+                // Check if the player has won and trigger victory sound
                 if (player.playerWon(player.getPosition(),exits)) {
                     winInterval-=delta;
                     if (winInterval<=0){
@@ -205,26 +223,32 @@ public class GameScreen implements Screen {
                         paused=true;
                     }
                 }
+
+                // Handle player input for movement
                 handleInput(delta);
             }else  {
+
+                // Go to the lose menu if the player has lost
                 game.goToloseMenu();
                 audioManager.playGameOverSound();
             }
         }
-        if (yovuz.checker()) {
-            audioManager.playGhostSound();
-        }
-        if (paused) {
 
+
+        // Check if the game is paused
+        if (paused) {
             if (player.playerWon(player.getPosition(),exits)) {
+                // Go to the won menu if the player has won
                 game.goToWonMenu();
             } else {
+                // Update and draw the stage (buttons) for the pause menu
                 stage.act(); // Update the stage
                 stage.draw(); // Draw the stage (buttons)
             }
         }
         game.getSpriteBatch().end(); // Important to call this after drawing everything
 
+        // Set up and begin drawing with the sprite batch for the HUD
         hudSpriteBatch.setProjectionMatrix(hudCamera.combined);
         hudCamera.position.set(player.getPosition(), 0);
         hudCamera.zoom=0.2f;

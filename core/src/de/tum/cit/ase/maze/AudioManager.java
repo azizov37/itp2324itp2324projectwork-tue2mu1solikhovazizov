@@ -33,7 +33,7 @@ public class AudioManager {
         gameBackgroundMusic.setLooping(true);
 
         gameBackgroundMusic.setVolume(0.02f);
-        backgroundMusic.setVolume(0.01f);
+        backgroundMusic.setVolume(0.02f);
 
         // Load sound effects (Source for all: zapsplat.net)
         lifeLostSound = Gdx.audio.newSound(Gdx.files.internal("life_lost.mp3"));
